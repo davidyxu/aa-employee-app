@@ -1,0 +1,78 @@
+<h1><%= @employee.name%></h1>
+<p>
+	<% if @employee.supervisor %>
+		Supervisor: 
+		<%=link_to @employee.supervisor.name, employee_path(@employee.supervisor)%>
+		<br>
+	<% end %>
+	<% profile = @employee.employee_profile %>
+	<% if profile %>
+		<% if profile.avatar_file_name %>
+			Profile Picture:
+			<br>
+			<%= image_tag profile.avatar.url %>
+			<br>
+		<% end %>
+		<% if !profile.title.blank?  %>
+			<%= "Title: #{profile.title}" %>
+			<br>
+		<% end %>
+
+		<% if profile.salary?  %>
+			<%= "Salary: $#{profile.salary}" %>
+			<br>
+		<% end %>
+
+		<% if profile.height != 0 %>
+			<%= "Height: #{profile.height_in_words}" %>
+			<br>
+		<% end %>
+
+		<% if !profile.food.blank? %>
+			<%= "Favorite Food: #{profile.food}"  %>
+			<br>
+		<% end %>
+
+		<% if !profile.day.blank? %>
+			<%= "Favorite Day: #{profile.day_in_words}"  %>
+			<br>
+		<% end %>
+
+		<% if profile.dob %>
+			<%= "Date of birth: #{profile.dob}"  %>
+			<br>
+			<%= "Age: #{profile.age}" %>
+			<br>
+		<% end %>
+
+		<% if !profile.description.blank?  %>
+			<%= "Description: #{profile.description}" %>
+			<br>
+		<% end %>
+	<% end %>
+</p> 
+
+<% unless @employee.teams.empty? %>
+	<p><b>Team Membership</b></p>
+	<ul>
+		<% @employee.teams.each do |team| %>
+		<li>
+			<%= link_to team.name, team_path(team) %>
+		</li>
+		<% end %>
+	</ul>
+<% end %>
+
+<% unless @employee.supervised_teams.empty? %>
+	<p><b>Supervising</b></p>
+	<ul>
+		<% @employee.supervised_teams.each do |team| %>
+		<li>
+			<%= link_to team.name, team_path(team) %>
+		</li>
+		<% end %>
+	</ul>
+<% end %>
+
+<%= link_to "Edit", edit_employee_path(@employee) %> | 
+<%= link_to "Delete", employee_path(@employee), :method => :delete %>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>EmployeeApp</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<% flash.each do |type, message| %>
+	<%= message %>
+	<br>
+<%end%>
+<%= yield %>
+<br><br>
+<%= link_to "Team Index", teams_path %> | 
+<%= link_to "Employee Index", employees_path %>
+</body>
+</html>

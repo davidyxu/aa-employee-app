@@ -1,0 +1,108 @@
+<%= form_for(@employee) do |f| %>
+	<%= f.label :name %>
+	<%= f.text_field :name %>
+	<% employees = Employee.all %>
+	<%= f.collection_select :supervisor_id,
+													employees,
+													:id, 
+													:name, 
+													{:include_blank => "Select Supervisor"}
+												%>
+	<br><br>
+	<b>Profile</b>
+	<br>
+	<%= f.fields_for(:employee_profile) do |pf| %>
+		<%= pf.label :avatar, "Profile Picture" %>
+		<%= pf.file_field :avatar %>
+		<% if @employee.employee_profile && @employee.employee_profile.avatar_file_name%>
+			<br>
+			<input type="checkbox" name="clear_image" id="clear_image">
+			<label for="clear_image">Remove Image</label>
+		<% end %>
+		<br>
+		<%= pf.label :title %>
+		<%= pf.text_field :title %>
+		<br>
+		Height:
+		<select name="feet">
+			<option value=0 selected>Feet</option>
+			<% 1.	upto(9) do |feet| %>
+			<option value = <%=feet%>
+				<%=!@employee.employee_profile.nil? &&
+				   !@employee.employee_profile.height.nil? &&
+				   @employee.employee_profile.height/12 == feet ? "selected" : nil %>>
+				<%=feet%>
+			</option>
+			<% end %>
+		</select>
+
+		<select name="employee[employee_profile_attributes][height]">
+			<option value=0 selected>Inches</option>
+			<% 12.times do |inch| %>
+			<option value=<%=inch%>
+				<%=!@employee.employee_profile.nil? &&
+				   !@employee.employee_profile.height.nil? &&
+				   @employee.employee_profile.height != 0 &&
+				   @employee.employee_profile.height%12 == inch ? "selected" : nil%>>
+				<%=inch%>
+			</option>
+			<% end %>
+		</select>
+		<br>
+		Favorite day
+		<!-- Change to all options for default values-->
+		<% days = [["Monday", "M"],
+							 ["Tuesday", "T"],
+							 ["Wednesday", "W"],
+							 ["Thursday", "R"],
+               ["Friday", "F"],
+							 ["Saturday", "S"],
+							 ["Sunday", "U"]]
+								%>
+		<select name="employee[employee_profile_attributes][day]">
+			<option value = "" selected>
+				Select a favorite day
+			</option>
+			<%= days.each do |day| %>
+				<option value = <%=day[1]%>
+					<%= !@employee.employee_profile.nil? &&
+							@employee.employee_profile.day == day[1] ? "selected" : nil
+					%>>
+					<%=day[0]%>
+				</option>
+			<% end %>
+		</select>
+		<br>
+		<%= pf.label :food, "Favorite food" %>
+		<%= pf.text_field :food %>
+		<br>
+		<%= pf.label :dob, "Date of birth" %>
+		<%= pf.date_select :dob,
+											 :start_year => Time.now.year-100,
+											 :end_year => Time.now.year
+											%>
+		<br>
+		<%= pf.label :salary %>
+		<%= pf.number_field :salary, :step => 5000 %>
+		<br>
+		<%= pf.label :description %>
+		<br>
+		<%= pf.text_area :description %>
+	<% end %>
+	<br>
+	<b>Team Membership</b>
+	<br>
+	<% Team.all.each do |team| %>
+		<input type="checkbox"
+					 value="<%=team.id%>"
+					 name="employee[team_ids][]"
+					 id="team_ids_<%=team.id%>"
+					 <%=@employee.teams.include?(team) ? "checked" : nil%>
+					>
+		<label for="team_ids_<%=team.id%>">
+			<%= team.name %>
+		</label>
+		<br>
+	<% end %>
+	<%= f.submit %>
+<% end %>

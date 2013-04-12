@@ -1,0 +1,22 @@
+<h1><%= @team.name %></h1>
+<% if @team.supervisor %>
+	<h3>Supervised by: 
+		<%=link_to @team.supervisor.name, employee_path(@team.supervisor) %>
+	</h3>
+<% end %>
+<p>
+	<b>
+		Members:
+	</b>
+	<ul>
+		<% @team.employees.each do |employee| %>
+		<li>
+			<%= link_to employee.name, employee_path(employee) %>
+		</li>
+		<% end %>
+	</ul>
+</p>
+
+<p>
+	<%= link_to "Edit", edit_team_path(@team) %> | 
+	<%= link_to "Delete", team_path(@team), :method => :delete %>

@@ -1,0 +1,15 @@
+<h1>Teams Index</h1>
+<ul>
+	<% @teams.each do |team| %>
+		<li>
+			<%= link_to team.name, team_path(team) %>
+			<% if team.supervisor %>
+				<small>
+					- supervised by <%= team.supervisor.name %>
+				</small>
+			<% end %>
+		</li>
+	<% end %>
+</ul>
+
+<%= link_to "New Team", new_team_path %>

@@ -1,0 +1,31 @@
+<%= form_for(@team) do |f| %>
+	<%= f.label :name %>
+	<%= f.text_field :name %>
+
+	<br>
+	<%= f.label :supervisor_id %>
+	<% employees = Employee.all %>
+	<%= f.collection_select :supervisor_id,
+													employees,
+													:id,
+													:name,
+													{:include_blank => "Please select a supervisor"}
+												%>
+
+	<br>
+	Employee Membership
+	<br>
+	<% employees.each do |employee| %>
+		<input type="checkbox"
+					 name="team[employee_ids][]"
+					 value="<%=employee.id%>"
+					 id="employee_id_<%=employee.id%>"
+					 <%= @team.employees.include?(employee) ? "checked" : nil %>>
+
+		<label for="employee_id_<%=employee.id%>">
+			<%= employee.name %>
+		</label>
+		<br>
+	<% end %>
+	<%= f.submit %>
+<% end %>
